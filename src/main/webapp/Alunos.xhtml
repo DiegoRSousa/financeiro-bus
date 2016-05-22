@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="corpo">
+
+		<f:metadata>
+			<f:viewAction action="#{alunoBean.todos}" />
+		</f:metadata>
+
+		<h1>Alunos</h1>
+
+		<h:form id="frm">
+
+			<p:messages id="msgs" />
+			
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<h:panelGrid columns="3">
+						<p:inputText value="#{alunoBean.filtro.nome}" id="nomeFiltro" 
+							placeholder="Nome do aluno" />
+						<p:commandButton value="Pesquisar" update="alunos-table"
+							process="@form" action="#{alunoBean.excluir}"/>
+					</h:panelGrid>
+				</f:facet>
+				
+				<f:facet name="right">
+					<p:commandButton value="Novo" icon="ui-icon-document"
+						action="#{alunoBean.prepararCadastro}" process="@this"
+						update="aluno-dialog" oncomplete="PF('edicaoAlunoDialog').show()">
+						<p:resetInput target="aluno-dialog" />
+					</p:commandButton>
+
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+
+					<p:commandButton icon="ui-icon-pencil" title="Editar"
+						style="margin-right:7px" process="@this" update="aluno-dialog"
+						oncomplete="PF('edicaoAlunoDialog').show()"
+						disabled="#{alunoBean.alunoSelecionado == null}">
+						<p:resetInput target="aluno-dialog" />
+						<f:setPropertyActionListener value="#{alunoBean.alunoSelecionado}"
+							target="#{alunoBean.aluno}" />
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						process="@this" update="alunos-table msgs toolbar"
+						action="#{alunoBean.excluir}"
+						disabled="#{alunoBean.alunoSelecionado == null}"
+						style="margin-right:7px">
+						<p:confirm icon="ui-icon-alert" header="Confirmação de exclusão"
+							message="Tem certeza que deseja excluir o aluno?" />
+
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-arrowthick-1-s"
+						title="Exportar para XLS" style="margin-right:7px"
+						ajax="false" immediate="true">
+						<p:dataExporter type="xls" target="alunos-table"
+							fileName="alunos"/>
+					</p:commandButton>
+
+				</f:facet>
+
+			</p:toolbar>
+
+			<p:dataTable value="#{alunoBean.alunos}" var="aluno" border="1"
+				emptyMessage="Nenhum aluno encontrado" cellspacing="0"
+				cellpadding="2" paginator="true" rows="12" id="alunos-table"
+				paginatorPosition="bottom" style="margin-top:10px"
+				selection="#{alunoBean.alunoSelecionado}" selectionMode="single"
+				rowKey="#{aluno.id}">
+
+				<p:ajax event="rowSelect" update=":frm:toolbar" />
+				<p:ajax event="rowUnselect" update=":frm:toolbar" />
+
+				<p:column headerText="Código" sortBy="#{aluno.codigo}" width="50">
+					<h:outputText value="#{aluno.id}" />
+				</p:column>
+				<p:column headerText="Aluno" sortBy="#{aluno.nome}" width="300">
+					<h:outputText value="#{aluno.nome}" />
+				</p:column>
+
+				<p:column headerText="Matricula" sortBy="#{aluno.matricula}"
+					width="250">
+					<h:outputText value="#{aluno.matricula}" />
+				</p:column>
+
+				<p:column headerText="CPF" width="150">
+					<h:outputText value="#{aluno.cpf}" />
+				</p:column>
+
+				<p:column headerText="Telefone" width="150">
+					<h:outputText value="#{aluno.telefone}" />
+				</p:column>
+
+				<p:column headerText="Email">
+					<h:outputText value="#{aluno.email}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<p:dialog header="Novo aluno" widgetVar="edicaoAlunoDialog"
+				id="aluno-dialog" resizable="false" modal="true"
+				closeOnEscape="true">
+
+				<p:messages autoUpdate="true" id="msg-dialog" />
+
+				<p:defaultCommand target="salvar-button" scope="aluno-dialog" />
+
+				<p:panelGrid columns="4" id="painel-dialog">
+
+					<p:outputLabel value="Aluno:" for="nome" />
+					<p:inputText id="nome" size="30" maxlength="64"
+						value="#{alunoBean.aluno.nome}" required="true">
+					</p:inputText>
+
+					<p:outputLabel value="CPF:" for="cpf" />
+					<p:inputMask id="cpf" size="11" maxlength="11"
+						value="#{alunoBean.aluno.cpf}" required="true"
+						mask="999.999.999-99" />
+
+					<p:outputLabel value="Matricula:" for="matricula" />
+					<p:inputText id="matricula" size="10" maxlength="16"
+						value="#{alunoBean.aluno.matricula}" required="true" />
+
+					<p:outputLabel value="Telefone:" for="telefone" />
+					<p:inputMask id="telefone" size="11" maxlength="11"
+						value="#{alunoBean.aluno.telefone}" required="true"
+						mask="(99)99999-9999" />
+
+					<p:outputLabel value="Email:" for="email" />
+					<p:inputText id="email" size="30" maxlength="32"
+						value="#{alunoBean.aluno.email}">
+					</p:inputText>
+
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:outputLabel value="Logradouro:" for="logradouro" />
+					<p:inputText size="20" maxlength="32" id="logradouro"
+						value="#{alunoBean.aluno.endereco.logradouro}" required="true" />
+
+					<p:outputLabel value="Número:" for="numero" />
+					<p:inputText id="numero" size="4" maxlength="6"
+						value="#{alunoBean.aluno.endereco.numero}" required="true" />
+
+					<p:outputLabel value="Bairro:" for="bairro" />
+					<p:inputText id="bairro" size="24" maxlength="24"
+						value="#{alunoBean.aluno.endereco.bairro}" required="true" />
+
+					<p:outputLabel value="CEP:" for="cep" />
+					<p:inputMask id="cep" size="8" maxlength="8"
+						value="#{alunoBean.aluno.endereco.cep}" mask="99999-999" />
+
+					<p:outputLabel value="Cidade:" for="cidade" />
+					<p:inputText id="cidade" size="16" maxlength="48"
+						value="#{alunoBean.aluno.endereco.cidade}" required="true" />
+
+					<p:outputLabel value="Estado:" for="estado" />
+					<p:inputText id="estado" size="10" maxlength="18"
+						value="#{alunoBean.aluno.endereco.estado}" required="true" />
+
+					<p:outputLabel />
+					<p:outputLabel />
+					<p:outputLabel />
+
+					<p:commandButton value="Salvar" id="salvar-button"
+						action="#{alunoBean.salvar}" process="aluno-dialog"
+						update="msg-dialog painel-dialog"
+						oncomplete=" if(!args.validationFailed) PF('edicaoAlunoDialog').hide()"
+						icon="ui-icon-disk" />
+				</p:panelGrid>
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>

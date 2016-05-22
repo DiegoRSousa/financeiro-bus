@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>
+		<ui:insert name="titulo">Sistema Financeiro</ui:insert>
+	</title>
+	<h:outputStylesheet library="uepb" name="estilo.css" />
+</h:head>
+<h:body>
+	<header>
+		<h:graphicImage library="uepb" name="logo.png" />
+	</header>
+
+	<p:ajaxStatus styleClass="ajax-status">
+		<f:facet name="start">
+			<h:graphicImage library="uepb" name="loading.gif" />
+		</f:facet>
+		<f:facet name="complete">
+			<h:outputText value="" />
+		</f:facet>
+	</p:ajaxStatus>
+
+	<h:form>
+		<p:menubar style="margin-top: -20px; margin-bottom: 20px">
+			<p:submenu label="Cadastros">
+				<p:menuitem value="Alunos"
+					action="/Alunos?faces-redirect=true" />
+			</p:submenu>
+			<p:submenu label="Relatórios">
+			</p:submenu>
+			<p:submenu label="Sistema">
+				<p:menuitem value="Sair" />
+			</p:submenu>
+
+		</p:menubar>
+	</h:form>
+
+	<div id="conteudo">
+		<ui:insert name="corpo" />
+	</div>
+	<footer> Sistema de controle financeiro para ônibus de
+		transporte universitário </footer>
+		
+	<h:form>
+		<p:confirmDialog global="true">
+			<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no"
+				icon="ui-icon-close"/>
+			<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"
+				icon="ui-icon-check"/>
+		</p:confirmDialog>
+	</h:form>
+</h:body>
+</html>
