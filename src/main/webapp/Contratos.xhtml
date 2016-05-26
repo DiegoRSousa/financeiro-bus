@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="corpo">
+		<h1>Contratos</h1>
+		<h:form id="frm">
+			
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<h:panelGrid columns="3">
+						<p:inputText placeholder="Nome do aluno" />
+						<p:commandButton value="Pesquisar"/>
+					</h:panelGrid>
+				</f:facet>
+				
+				<f:facet name="right">
+					<p:commandButton value="Novo" icon="ui-icon-document" 
+						onclick="PF('edicaoContratoDialog').show()"/>
+
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+
+					<p:commandButton value="Editar" icon="ui-icon-pencil" title="Editar"
+						oncomplete="PF('edicaoContratoDialog').show()">
+						
+					</p:commandButton>
+
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel" title="Cancelar">
+						<p:confirm icon="ui-icon-alert" header="Confirmação de cancelamento"
+							message="Tem certeza que deseja cancelar o contrato?" />
+					</p:commandButton>
+
+					<p:commandButton icon="ui-icon-arrowthick-1-s"
+						title="Exportar para XLS" style="margin-right:7px"
+						ajax="false" immediate="true">
+						<p:dataExporter type="xls" target="contratos-table"
+							fileName="contratos"/>
+					</p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable>
+				<p:column headerText="Plano de pagamento" /> <!-- width="50" -->
+				<p:column headerText="Aluno"/>
+				<p:column headerText="Instituição de Ensino" />
+				<p:column headerText="Data inicial"/>
+				<p:column headerText="data final"/>
+			</p:dataTable>
+			
+			<p:dialog header="Novo Contrato" widgetVar="edicaoContratoDialog" id="contratoDialog"
+					resizable="false" modal="true" closeOnEscape="true">
+					<p:panelGrid columns="2" id="grid">
+				<p:outputLabel value="Plano de pagamento" for="plano"/>
+				<p:selectOneButton id="plano"
+						value="Plano de pagamento">
+					
+				</p:selectOneButton>
+				
+				<p:outputLabel value="Aluno" for="aluno"/>
+				<p:selectOneMenu value="contratoBean.contrato.aluno"
+						id="aluno" filter="true" filterMatchMode="contains">
+					<f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+					<f:selectItems value="contratoBean.todosAlunos}"
+						var="aluno" itemValue="#{aluno}" itemLabel="#{aluno.nome}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="Instituicao" for="instituicao"/>
+				<p:selectOneMenu value="contratoBean.contrato.instituicaoEnsino"
+						id="instituicao" filter="true" filterMatchMode="contains">
+					<f:selectItem itemLabel="Selecione" noSelectionOption="true"/>
+					<f:selectItems value="contratoBean.todasInstituicoesEnsino}"
+						var="instituicao" itemValue="#{instituicao}" itemLabel="#{instituicao.acronimo}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel value="Data inicial" for="dataInicial"/>
+				<p:calendar size="12" id="dataInicial" pattern="dd/MM/yyyy"
+					value="#{contratoBean.contrato.dataInicio}"/>
+					
+				<p:outputLabel value="Data Final" for="dataFinal"/>
+				<p:calendar size="12" id="dataFinal" pattern="dd/MM/yyyy"
+					value="#{contratoBean.contrato.dataFim}"/>
+					
+				<p:outputLabel />
+
+				<p:commandButton value="Salvar" action="#{contratoBean.salvar}"
+					icon="ui-icon-disk" update="@form" validateClient="true" />
+				
+			</p:panelGrid>
+			</p:dialog>
+		</h:form>
+    </ui:define>
+</ui:composition>
