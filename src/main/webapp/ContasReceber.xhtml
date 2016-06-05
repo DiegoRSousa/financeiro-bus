@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<ui:composition template="/WEB-INF/template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="corpo">
+		<h1>Contas A Receber</h1>
+		<h:form id="frm">
+
+			<p:toolbar id="toolbar">
+				<f:facet name="left">
+					<h:panelGrid columns="3">
+						<p:inputText placeholder="Nome do aluno" />
+						<p:commandButton value="Pesquisar" />
+					</h:panelGrid>
+				</f:facet>
+
+				<f:facet name="right">
+					<p:commandButton value="Nova" icon="ui-icon-document"
+						onclick="PF('edicaoContaReceberDialog').show()" />
+
+					<span class="ui-separator"> <span
+						class="ui-icon ui-icon-grip-dotted-vertical" />
+					</span>
+
+					<p:commandButton value="Editar" icon="ui-icon-pencil"
+						title="Editar" oncomplete="PF('edicaoContaReceberDialog').show()">
+
+					</p:commandButton>
+
+					<p:commandButton value="Cancelar" icon="ui-icon-cancel"
+						title="Cancelar">
+						<p:confirm icon="ui-icon-alert"
+							header="Confirmação de cancelamento"
+							message="Tem certeza que deseja cancelar a conta a receber?" />
+					</p:commandButton>
+					<p:commandButton value="Receber" icon="ui-icon-play"
+						title="Receber" oncomplete="PF('edicaoRecebimentoDialog').show()"/>
+
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable cellspacing="0" cellpadding="2" paginator="true"
+				rows="12" id="contasReceber-table" paginatorPosition="bottom"
+				style="margin-top:10px">
+
+				<p:column headerText="Aluno Contrato" />
+				<p:column headerText="Referência" />
+				<p:column headerText="Competência" />
+				<p:column headerText="Vencimento" />
+				<p:column headerText="Valor" />
+				<p:column headerText="Saldo" />
+			</p:dataTable>
+
+			<p:dialog header="Nova Conta a receber"
+				widgetVar="edicaoContaReceberDialog" id="ContaReceberDialog"
+				resizable="false" modal="true" closeOnEscape="true">
+				<p:panelGrid columns="2" id="grid-contaReceber">
+
+					<p:outputLabel value="Aluno Contrato" />
+					<p:selectOneMenu id="contrato" fliter="true"
+						filterMatchMode="contains">
+						<f:selectItem itemLabel="Selecione" noSelectionOption="true" />
+						<f:selectItems var="contratos" />
+					</p:selectOneMenu>
+					<p:outputLabel value="Referente a" />
+					<p:inputText id="referencia" size="30" />
+					<p:outputLabel value="Competência" />
+					<p:calendar id="competencia" size="10" pattern="dd/MM/yyyy"
+						mask="99/99/9999" />
+					<p:outputLabel value="Vencimento" />
+					<p:calendar id="vencimento" size="10" pattern="dd/MM/yyyy"
+						mask="99/99/9999" />
+					<p:outputLabel value="Valor" />
+					<p:inputMask mask="99,99" size="10" />
+					<p:outputLabel value="Saldo" />
+					<p:inputMask mask="99,99" size="10" disabled="true" />
+					<p:outputLabel />
+					<p:commandButton value="Salvar" icon="ui-icon-disk" update="@form"
+						validateClient="true" />
+				</p:panelGrid>
+			</p:dialog>
+			<p:dialog header="Novo recebimetno" widgetVar="edicaoRecebimentoDialog" 
+			id="recebimentoDialog" resizable="false" modal="true" closeOnEscape="true">
+				<p:panelGrid columns="2" id="grid-pagamento">
+					<p:outputLabel value="Aluno" />
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="Nome aluno" />
+					</p:selectOneMenu>
+					<p:outputLabel value="Data" />
+					<p:calendar id="data-recebimento" size="10" pattern="dd/MM/yyyy"
+						mask="99/99/9999" />
+					<p:outputLabel value="Valor" />
+					<p:inputMask mask="99,99" size="10"/>
+					<p:outputLabel/>
+					<p:commandButton value="Receber" />
+				</p:panelGrid>
+
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
